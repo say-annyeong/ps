@@ -1,9 +1,9 @@
+default rel
 section .data
     input: db "%d %d",0
     output: db "%d",10,0
-
-    a: times 4 db 0
-    b: times 4 db 0
+    a: dd 0
+    b: dd 0
 
 section .text
     global main
@@ -11,23 +11,23 @@ section .text
     extern printf
 
 main:
-	push rbp
+    push rbp
+    mov rbp, rsp
+    sub rsp, 32  ; 스택 정렬
 
-	mov rdi, input
-	lea rsi, [a]
-	lea rdx, [b]
-	mov rax, 0
-	call scanf
+    lea rcx, [rel input]
+    lea rdx, [a]
+    lea r8, [b]
+    call scanf
 
-	mov rax, [a]
-	mov rbx, [b]
-	add rax, rbx
+    mov ecx, [a]
+    add ecx, [b]
 
-	mov rdi, output
-	mov rsi, rax
-	mov rax, 0
-	call printf
+    lea rcx, [rel output]
+    mov edx, ecx
+    call printf
 
-	pop rbp
-	mov rax,0
+    add rsp, 32
+    pop rbp
+    xor rax, rax
     ret
